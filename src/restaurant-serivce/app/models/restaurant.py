@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, Text, DateTime
 from sqlalchemy.sql import func
 
-from app.core.database import Base
+from restaurant_service.core.database import Base
 
 class Restaurant(Base):
     __tablename__ = "restaurants"
