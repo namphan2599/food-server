@@ -1,15 +1,32 @@
-FROM node:16-alpine
+# Build stage
+FROM golang:1.21-alpine AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
+# Copy go mod and sum files
+COPY go.mod ./
+COPY go.sum ./
 
-RUN npm install
+# Download dependencies
+RUN go mod download
 
+# Copy source code
 COPY . .
 
-RUN npm run build
+# Build the application
+RUN CGO_ENABLED=0 GOOS=linux go build -o main .
 
-EXPOSE 3000
+# Final stage
+FROM alpine:latest
 
-CMD ["node", "dist/main.js"]
+WORKDIR /app
+
+# Copy binary from builder
+COPY --from=builder /app/main .
+COPY --from=builder /app/.env .
+
+# Expose port
+EXPOSE 8080
+
+# Run the application
+CMD ["./main"]
