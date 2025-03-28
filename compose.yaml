@@ -13,53 +13,53 @@ services:
     networks:
       - food-delivery-network
 
-  postgres:
-    image: postgres:latest
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_MULTIPLE_DATABASES=restaurant_service,menu_service
-    networks:
-      - food-delivery-network
+  # postgres:
+  #   image: postgres:latest
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
+  #     - POSTGRES_MULTIPLE_DATABASES=restaurant_service,menu_service
+  #   networks:
+  #     - food-delivery-network
 
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2019-latest
-    ports:
-      - "1433:1433"
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=YourStrong@Passw0rd
-    volumes:
-      - sqlserver_data:/var/opt/mssql
-    networks:
-      - food-delivery-network
+  # sqlserver:
+  #   image: mcr.microsoft.com/mssql/server:2019-latest
+  #   ports:
+  #     - "1433:1433"
+  #   environment:
+  #     - ACCEPT_EULA=Y
+  #     - SA_PASSWORD=YourStrong@Passw0rd
+  #   volumes:
+  #     - sqlserver_data:/var/opt/mssql
+  #   networks:
+  #     - food-delivery-network
 
-  redis:
-    image: redis:latest
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - food-delivery-network
+  # redis:
+  #   image: redis:latest
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   networks:
+  #     - food-delivery-network
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data
-    networks:
-      - food-delivery-network
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+  #   ports:
+  #     - "9200:9200"
+  #     - "9300:9300"
+  #   environment:
+  #     - discovery.type=single-node
+  #     - xpack.security.enabled=false
+  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  #   volumes:
+  #     - elasticsearch_data:/usr/share/elasticsearch/data
+  #   networks:
+  #     - food-delivery-network
 
   # Services
   user-service:
@@ -77,87 +77,87 @@ services:
     networks:
       - food-delivery-network
 
-  restaurant-service:
-    build:
-      context: ./restaurant-service
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_SERVER=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_DB=restaurant_service
-    depends_on:
-      - postgres
-    networks:
-      - food-delivery-network
+  # restaurant-service:
+  #   build:
+  #     context: ./restaurant-service
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
+  #     - POSTGRES_SERVER=postgres
+  #     - POSTGRES_PORT=5432
+  #     - POSTGRES_DB=restaurant_service
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - food-delivery-network
 
-  menu-service:
-    build:
-      context: ./menu-service
-      dockerfile: Dockerfile
-    ports:
-      - "8001:8001"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_SERVER=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_DB=menu_service
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - ELASTICSEARCH_HOST=elasticsearch
-      - ELASTICSEARCH_PORT=9200
-    depends_on:
-      - postgres
-      - redis
-      - elasticsearch
-    networks:
-      - food-delivery-network
+  # menu-service:
+  #   build:
+  #     context: ./menu-service
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8001:8001"
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
+  #     - POSTGRES_SERVER=postgres
+  #     - POSTGRES_PORT=5432
+  #     - POSTGRES_DB=menu_service
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=6379
+  #     - ELASTICSEARCH_HOST=elasticsearch
+  #     - ELASTICSEARCH_PORT=9200
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #     - elasticsearch
+  #   networks:
+  #     - food-delivery-network
 
-  order-service:
-    build:
-      context: ./order-service
-      dockerfile: Dockerfile
-    ports:
-      - "5000:80"
-    environment:
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=FoodDeliveryOrders;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
-    depends_on:
-      - sqlserver
-    networks:
-      - food-delivery-network
+  # order-service:
+  #   build:
+  #     context: ./order-service
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "5000:80"
+  #   environment:
+  #     - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=FoodDeliveryOrders;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+  #   depends_on:
+  #     - sqlserver
+  #   networks:
+  #     - food-delivery-network
 
-  payment-service:
-    build:
-      context: ./payment-service
-      dockerfile: Dockerfile
-    ports:
-      - "3002:3000"
-    environment:
-      - MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/food-delivery-payments?authSource=admin
-      - STRIPE_SECRET_KEY=your_stripe_secret_key
-    depends_on:
-      - mongodb
-    networks:
-      - food-delivery-network
+  # payment-service:
+  #   build:
+  #     context: ./payment-service
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3002:3000"
+  #   environment:
+  #     - MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/food-delivery-payments?authSource=admin
+  #     - STRIPE_SECRET_KEY=your_stripe_secret_key
+  #   depends_on:
+  #     - mongodb
+  #   networks:
+  #     - food-delivery-network
 
-  delivery-service:
-    build:
-      context: ./delivery-service
-      dockerfile: Dockerfile
-    ports:
-      - "3003:3003"
-    environment:
-      - PORT=3003
-      - MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/food-delivery-delivery?authSource=admin
-      - JWT_SECRET=your-secret-key
-    depends_on:
-      - mongodb
-    networks:
-      - food-delivery-network
+  # delivery-service:
+  #   build:
+  #     context: ./delivery-service
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3003:3003"
+  #   environment:
+  #     - PORT=3003
+  #     - MONGODB_URI=mongodb://root:rootpassword@mongodb:27017/food-delivery-delivery?authSource=admin
+  #     - JWT_SECRET=your-secret-key
+  #   depends_on:
+  #     - mongodb
+  #   networks:
+  #     - food-delivery-network
 
 networks:
   food-delivery-network:
@@ -165,7 +165,7 @@ networks:
 
 volumes:
   mongodb_data:
-  postgres_data:
-  sqlserver_data:
-  redis_data:
-  elasticsearch_data:
+  # postgres_data:
+  # sqlserver_data:
+  # redis_data:
+  # elasticsearch_data:

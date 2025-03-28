@@ -2,11 +2,11 @@
   "name": "user-service",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/app.js",
   "scripts": {
     "start": "node dist/app.js",
-    "dev": "nodemon src/app.ts",
-    "build": "tsc"
+    "dev": "nodemon --exec ts-node src/app.ts",
+    "build": "tsc -p tsconfig.json"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +29,7 @@
     "@types/passport-local": "^1.0.38",
     "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.9",
+    "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   }

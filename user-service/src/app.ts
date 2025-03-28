@@ -1,11 +1,11 @@
-import express, { Application } from 'express';
+import express, { Application, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import helmet from 'helmet';
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 
 // Load environment variables
-dotenv.config();
+// dotenv.config();
 
 // Import routes (to be created)
 import authRoutes from './routes/auth.routes';
@@ -24,6 +24,11 @@ app.use(helmet());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+
+app.get('/health', (req: Request, res: Response) => {
+  res.status(200).json({ status: 'healthy' });
+});
+
 
 // Connect to MongoDB
 mongoose
