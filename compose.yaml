@@ -13,18 +13,18 @@ services:
     networks:
       - food-delivery-network
 
-  # postgres:
-  #   image: postgres:latest
-  #   ports:
-  #     - "5432:5432"
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-  #   environment:
-  #     - POSTGRES_USER=postgres
-  #     - POSTGRES_PASSWORD=postgres
-  #     - POSTGRES_MULTIPLE_DATABASES=restaurant_service,menu_service
-  #   networks:
-  #     - food-delivery-network
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_MULTIPLE_DATABASES=restaurant_service,menu_service
+    networks:
+      - food-delivery-network
 
   # sqlserver:
   #   image: mcr.microsoft.com/mssql/server:2019-latest
@@ -77,22 +77,22 @@ services:
     networks:
       - food-delivery-network
 
-  # restaurant-service:
-  #   build:
-  #     context: ./restaurant-service
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "8000:8000"
-  #   environment:
-  #     - POSTGRES_USER=postgres
-  #     - POSTGRES_PASSWORD=postgres
-  #     - POSTGRES_SERVER=postgres
-  #     - POSTGRES_PORT=5432
-  #     - POSTGRES_DB=restaurant_service
-  #   depends_on:
-  #     - postgres
-  #   networks:
-  #     - food-delivery-network
+  restaurant-service:
+    build:
+      context: ./restaurant-service
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=restaurant_service
+    depends_on:
+      - postgres
+    networks:
+      - food-delivery-network
 
   # menu-service:
   #   build:
@@ -165,7 +165,7 @@ networks:
 
 volumes:
   mongodb_data:
-  # postgres_data:
+  postgres_data:
   # sqlserver_data:
   # redis_data:
   # elasticsearch_data:
