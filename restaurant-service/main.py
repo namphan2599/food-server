@@ -24,7 +24,7 @@ app.include_router(restaurant_router, prefix="/api/restaurants", tags=["restaura
 
 @app.get("/health", tags=["health"])
 async def health_check():
-    return {"status": "healthy"}
+    return {"status": "healthyyeah2"}
 
 if __name__ == "__main__":
     import uvicorn

@@ -83,6 +83,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    volumes:
+      - type: bind
+        source: ./restaurant-service
+        target: /app
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres

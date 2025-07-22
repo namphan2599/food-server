@@ -3,6 +3,12 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 
 class RestaurantBase(BaseModel):
+    """
+    Shared properties for restaurant models.
+
+    This is the base model for the Restaurant, RestaurantCreate, and RestaurantUpdate models.
+    """
+
     name: str = Field(..., description="Name of the restaurant")
     description: Optional[str] = Field(None, description="Description of the restaurant")
     address: str = Field(..., description="Street address of the restaurant")
